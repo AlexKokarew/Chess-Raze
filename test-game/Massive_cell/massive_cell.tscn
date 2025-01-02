@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdkwjlcquhpqs"]
+
+[ext_resource type="Script" path="res://Massive_cell/Massive_cell.gd" id="1_kg1ly"]
+
+[node name="Massive_cell" type="Node"]
+script = ExtResource("1_kg1ly")

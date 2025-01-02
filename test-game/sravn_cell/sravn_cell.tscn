@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bu8bn8f10pntj"]
+
+[ext_resource type="Script" path="res://sravn_cell/sravn_cell.gd" id="1_x3wq7"]
+
+[node name="sravn_cell" type="Node"]
+script = ExtResource("1_x3wq7")
