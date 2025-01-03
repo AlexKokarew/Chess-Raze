@@ -18,8 +18,6 @@ func resize_array(rows: int, columns: int) -> void:
 func _ready():
 	# Инициализация массива 10x10
 	resize_array(10, 10)
-	print(grid)  # Выводит массив из 100 ячеек
-
+	
 	# Изменение размера массива на 5x5
 	resize_array(5, 5)
-	print(grid)  # Выводит массив из 25 ячеек, остальные ячейки будут удалены

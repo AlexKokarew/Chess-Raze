@@ -2,16 +2,15 @@ extends Node
 
 var M = 10 # Ширина псевдо-массива
 var C = 10 # столбец
-var max_index = 99  # Максимальный индекс (10 * 10 - 1)
-var min_index = 0  # Минимальный индекс
 
 # Текущие координаты игрока
 var current_row = 0
 var current_column = 0
 var current_position_move = Vector2(1, 1)
-var index
+var index = 0
 
-func move_player(direction: Vector2):
+
+func move_player(direction: Vector2, C: int, M: int,):
 	# Вычисляем новый индекс
 	var new_row = current_row + direction.y
 	var new_column = current_column + direction.x
@@ -20,49 +19,53 @@ func move_player(direction: Vector2):
 	if new_row >= 0 and new_row < C and new_column >= 0 and new_column < M:
 		current_row = new_row
 		current_column = new_column
+		var starii_index = index
 		index = current_row * M + current_column
-		print("Игрок перемещен на индекс: ", index)
+		return index
 	else:
 		print("Перемещение вне границ!")
+	
+	
+	
 
-func _on_input_event(event: String):
+func _king_input_event(event: String):
 	var ver := event
 
 	var upper = Vector2(0, -1)
 	if ver == "up":
-		move_player(upper)
-
+		var index = move_player(upper, C, M)
+		return index
 	var downer =  Vector2(0, 1)
 	if ver == "down":
-		move_player(downer)
-
+		var index = move_player(downer, C, M)
+		return index
 	var lefter = Vector2(-1, 0)
 	if ver == "left":
-		move_player(lefter)
-
+		var index = move_player(lefter, C, M)
+		return index
 	var righter = Vector2(1, 0)
 	if ver == "right":
-		move_player(righter)
-
+		var index = move_player(righter, C, M)
+		return index
 	var up_righter = Vector2(1, -1)
 	if ver == "up_right":
-		move_player(up_righter)
-
+		var index = move_player(up_righter, C, M)
+		return index
 	var up_lefter = Vector2(-1, -1)
 	if ver == "up_left":
-		move_player(up_lefter)
-
+		var index = move_player(up_lefter, C, M)
+		return index
 	var down_righter = Vector2(1, 1)
 	if ver == "down_right":
-		move_player(down_righter)
-
+		var index = move_player(down_righter, C, M)
+		return index
 	var down_lefter = Vector2(-1, 1)
 	if ver =="down_left":
-		move_player(down_lefter)
-
+		var index = move_player(down_lefter, C, M)
+		return index
 	var zeroer = Vector2(0, 0)
 	if ver =="zero":
-		move_player(zeroer)
-	
+		var index = move_player(zeroer, C, M)
+		return index
 	
 	

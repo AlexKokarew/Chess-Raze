@@ -1,6 +1,6 @@
 extends Node
 
-const ARRAY_SIZE = 100
+const ARRAY_SIZE = 64
 var bit_array: Array = []
 var filled_indices: Array = []
 
@@ -22,13 +22,6 @@ func _on_timer_timeout() -> void:
 	
 	update_cell(0, true)
 	
-	var testcell = is_cell_filled(0)
-	print(testcell)
-	var testcell2 = is_cell_filled(1)
-	print(testcell2)
-	var testcell3 = is_cell_filled(2)
-	print(testcell3)
-
 func is_cell_filled(index: int) -> bool:
 	if index < 0 or index >= ARRAY_SIZE:
 		pass
