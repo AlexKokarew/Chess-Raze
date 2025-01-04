@@ -53,3 +53,6 @@ func highlight():
 func remove_highlight():
 	is_highlighted = false
 	print("Highlight removed from cell at", position)
+	
+	
+	

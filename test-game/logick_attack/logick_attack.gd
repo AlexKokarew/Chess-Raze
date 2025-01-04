@@ -61,7 +61,7 @@ func _process_attack_on_cell(attacker: Attacker, defender: Defender, all_pieces:
 # Обработка вторичной защиты
 func _process_secondary_defense(attacker: Attacker, all_pieces: Array):
 	for piece in all_pieces:
-		if piece is Defender and piece.index == attacker.index:
+		if piece is Defender and piece.index == attacker.index and not piece.has_attacked:
 			print("Secondary defender found at position:", piece.index)
 			_process_attack_on_cell(attacker, piece, all_pieces)
 			return
@@ -154,5 +154,82 @@ func check_trap_or_obstacle(position: Vector2, all_pieces: Array):
 			print("Trap activated at position:", position)
 			return true
 	return false
+	
+	
 
-# Пример метода отражения атаки в классе Defender
+
+func process_event(all_pieces: Array, involved_pieces: Array, M: int):
+var conflict_map = {}  # Карта для всех индексов и конфликтов
+# Создаем ConflictQueue для каждого индекса
+for piece in involved_pieces:
+	var queue: ConflictQueue
+	if piece.index in conflict_map:
+		queue = conflict_map[piece.index]
+	else:
+		queue = ConflictQueue.new()
+		queue.index = piece.index
+		conflict_map[piece.index] = queue
+	queue.add_participant(piece)
+# Обрабатываем конфликты
+for index in conflict_map.keys():
+	var queue = conflict_map[index]
+	queue.sort_attackers()  # Сортируем атакеров
+	queue.process_conflict()  # Обрабатываем конфликт
+оверка корректности фигур
+ validate_pieces(pieces: Array) -> bool:
+for piece in pieces:
+	if not piece.has_method("index"):
+		print("Invalid piece detected:", piece)
+		return false
+return true
+вушки и преграды
+ check_trap_or_obstacle(position: Vector2, all_pieces: Array):
+for piece in all_pieces:
+	if piece.index == position and piece.has_method("is_trap") and piece.is_trap():
+		print("Trap activated at position:", position)
+		return true
+return false
+имер класса ConflictQueue
+var index: int               # Индекс на поле
+var participants: Array = [] # Участники, попавшие в очередь
+# Добавление участника в очередь
+func add_participant(unit: Unit):
+	if unit is Defender and not has_defender():
+		participants.insert(0, unit)  # Защитник всегда первый
+		print("Defender added to index", index)
+	elif unit is Attacker:
+		participants.append(unit)  # Атакеры добавляются в конец
+		print("Attacker added to index", index)
+	else:
+		print("Unknown unit type:", unit)
+# Проверка наличия защитника
+func has_defender() -> bool:
+	if participants.size() > 0 and participants[0] is Defender:
+		return true
+	return false
+# Сортировка атакеров по очередности (например, по атаке)
+func sort_attackers():
+	if has_defender():
+		var attackers = participants.slice(1)  # Убираем защитника
+		attackers.sort_custom(self, "_compare_attackers")
+		participants = [participants[0]] + attackers
+	else:
+		participants.sort_custom(self, "_compare_attackers")
+# Пользовательская сортировка атакеров
+func _compare_attackers(a: Attacker, b: Attacker) -> int:
+	return b.attack_power - a.attack_power  # Сначала атакеры с большей атакой
+# Обработка конфликта
+func process_conflict():
+	if participants.size() == 0:
+		print("No participants to process at index:", index)
+		return
+	print("Processing conflict at index:", index)
+	for i in range(participants.size()):
+		if i == 0 and has_defender():
+			var defender = participants[i]
+			print("Defender processing:", defender)
+			# Логика защитника
+		else:
+			var attacker = participants[i]
+			print("Attacker processing:", attacker)
+			# Логика атакера

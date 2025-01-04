@@ -33,3 +33,22 @@ func load_game():
 		defender2.health = state["defenders"][1]["health"]
 
 		print("Game loaded.")
+extends Node
+
+func save_game():
+	if not attacker or not defender1 or not defender2:
+		print("Error: Game state objects not initialized.")
+		return
+	
+	var state = {
+		"attacker": {"position": attacker.position, "health": attacker.health},
+		"defenders": [
+			{"position": defender1.position, "health": defender1.health},
+			{"position": defender2.position, "health": defender2.health}
+		]
+	}
+	var file = File.new()
+	file.open("user://savegame.json", File.WRITE)
+	file.store_string(to_json(state))
+	file.close()
+	print("Game saved.")
