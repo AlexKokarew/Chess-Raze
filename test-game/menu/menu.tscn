@@ -1,10 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://b658fng4j11jc"]
+[gd_scene load_steps=2 format=3 uid="uid://b658fng4j11jc"]
 
 [ext_resource type="Script" path="res://menu/menu.gd" id="1_byl5t"]
-[ext_resource type="PackedScene" uid="uid://chcuu5bo6163t" path="res://node/node.tscn" id="2_3haaq"]
-[ext_resource type="PackedScene" uid="uid://bu8bn8f10pntj" path="res://sravn_cell/sravn_cell.tscn" id="2_quuoc"]
-[ext_resource type="PackedScene" uid="uid://o61v4xmj434x" path="res://move/move.tscn" id="3_20fyh"]
-[ext_resource type="PackedScene" uid="uid://bdkwjlcquhpqs" path="res://Massive_cell/massive_cell.tscn" id="4_hvlbe"]
 
 [node name="menu" type="Node2D"]
 script = ExtResource("1_byl5t")
@@ -108,16 +104,12 @@ text = "print"
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
 
-[node name="Node" parent="." instance=ExtResource("2_3haaq")]
-
-[node name="move" parent="." instance=ExtResource("3_20fyh")]
-
-[node name="Massive_cell" parent="." instance=ExtResource("4_hvlbe")]
-
-[node name="sravn_cell" parent="." instance=ExtResource("2_quuoc")]
+[node name="Timer_frezze" type="Timer" parent="."]
+wait_time = 15.0
 
 [connection signal="pressed" from="CanvasLayer/Panel/Button" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Panel/Button2" to="." method="_on_button_test_pressed"]
 [connection signal="pressed" from="CanvasLayer/Panel/Button3" to="." method="_on_test"]
 [connection signal="pressed" from="CanvasLayer/Panel/Button4" to="." method="_button_massive_test"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Timer_frezze" to="." method="_on_timer_frezze_timeout"]
