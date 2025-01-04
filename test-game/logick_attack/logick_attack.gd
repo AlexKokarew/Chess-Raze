@@ -154,3 +154,5 @@ func check_trap_or_obstacle(position: Vector2, all_pieces: Array):
 			print("Trap activated at position:", position)
 			return true
 	return false
+
+# Пример метода отражения атаки в классе Defender

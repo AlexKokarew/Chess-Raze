@@ -1,15 +1,14 @@
 extends "res://class_trash/ChessPiece.gd"
 class_name Defender
 
-# Свойства защитников
-var defense_power: int  # Сила защиты
-var has_attacked: bool = false  # Совершил ли атаку
+# Свойства
+var defense_power: int = 30
+var can_counterattack: bool = true
 
-# Метод для отражения атаки
-func can_reflect_attack(attacker: Attacker) -> bool:
-	return defense_power > attacker.attack_power
-
-# Сброс состояния после атаки
-func reset_attack_state():
-	has_attacked = false
-	print("Defender attack state reset.")
+# Метод для контратаки атакующего
+func counterattack(attacker: ChessPiece):
+	if can_counterattack:
+		print("Defender at", position, "counterattacking attacker at", attacker.position)
+		attacker.take_damage(defense_power)
+		if not attacker.is_alive():
+			print("Attacker defeated by counterattack.")

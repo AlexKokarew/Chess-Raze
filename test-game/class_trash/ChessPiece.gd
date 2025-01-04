@@ -1,10 +1,14 @@
-extends "res://class_trash/Cell_object.gd"
-
+extends Object
+# Базовый класс для игровых фигур
 class_name ChessPiece
 
-# Свойства фигур
-var index: int  # Индекс клетки
-var health: int = 100  # Здоровье фигуры
+# Свойства
+var health: int = 100
+var position: Vector2 = Vector2(0, 0)
+
+# Метод для проверки, жива ли фигура
+func is_alive() -> bool:
+	return health > 0
 
 # Метод для получения урона
 func take_damage(amount: int):
@@ -12,11 +16,10 @@ func take_damage(amount: int):
 	if health <= 0:
 		die()
 
-# Метод для проверки, жива ли фигура
-func is_alive() -> bool:
-	return health > 0
-
 # Метод для удаления фигуры с поля
 func die():
-	release()
-	print("Piece at index", index, "is defeated.")
+	print("Chess piece at", position, "has been defeated.")
+
+# Метод для перемещения фигуры
+func move_to(new_position: Vector2):
+	position = new_position

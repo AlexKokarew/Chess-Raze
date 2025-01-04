@@ -1,14 +1,15 @@
 extends "res://class_trash/ChessPiece.gd"
 class_name Attacker
 
-# Свойства нападающих
-var attack_power: int  # Сила атаки
-var attack_direction: Vector2  # Направление атаки
 
-# Атака цели
-func attack(target: ChessPiece):
-	if not target.is_alive():
-		print("Target is already defeated.")
-		return
-	target.take_damage(attack_power)
-	print("Attacker dealt", attack_power, "damage to target.")
+# Свойства
+var attack_power: int = 50
+
+# Метод для атаки защитника
+func attack(defender: ChessPiece):
+	print("Attacker at", position, "attacking defender at", defender.position)
+	defender.take_damage(attack_power)
+	if defender.is_alive():
+		print("Defender survived the attack.")
+	else:
+		print("Defender defeated.")
