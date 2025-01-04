@@ -11,7 +11,6 @@ extends Node2D
 
 @onready var massive_cell = preload("res://Massive_cell/Massive_cell.gd")
 @onready var massive = massive_cell.new()
-@onready var massivea = massive._ready()
 
 @onready var sravn_cell = preload("res://sravn_cell/sravn_cell.gd")
 @onready var sravnener_cell = sravn_cell.new()
@@ -22,7 +21,6 @@ func _ready():
 	start_timer()
 	
 	
-
 
 func _on_start_button_pressed() -> void:
 	var mainscenetraningroom = load("res://level traning room/scene.tscn")
@@ -50,9 +48,8 @@ func _on_test() -> void:
 	var on_boll_timer_freze
 	
 	start_timer_frezze()
+	massive.initialize(64, false) 
 	
-	
-
 
 
 func _button_massive_test() -> void:

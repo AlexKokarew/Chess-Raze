@@ -1,23 +1,8 @@
-extends Node
+extends BaseArrayManager
 
-var grid = []  # Исходный массив
+class_name SravnCell
 
-# Функция для изменения размера массива
-func resize_array(rows: int, columns: int) -> void:
-	var new_size = rows * columns
-	# Уменьшаем или увеличиваем массив
-	if new_size < grid.size():
-		# Удаляем лишние элементы
-		grid.resize(new_size)  # Элементы будут удалены
-	elif new_size > grid.size():
-		# Добавляем новые элементы
-		for i in range(grid.size(), new_size):
-			grid.append(false)  # Добавляем новые ячейки с значением false
+func _ready() -> void:
+	initialize(100, false)  # Например, 10x10 массив
 
-# Пример использования
-func _ready():
-	# Инициализация массива 10x10
-	resize_array(10, 10)
-	
-	# Изменение размера массива на 5x5
-	resize_array(5, 5)
+# Все функции управления массивом унаследованы от BaseArrayManager

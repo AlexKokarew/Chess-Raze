@@ -1,35 +1,17 @@
-extends Node
+extends BaseArrayManager
 
-const ARRAY_SIZE = 64
-var bit_array: Array = []
+class_name MassiveCell
+
 var filled_indices: Array = []
 
-func _ready():
-	bit_array.resize(ARRAY_SIZE) # Инициализация битового массива
-	for i in range(ARRAY_SIZE):
-		bit_array[i] = false  # Изначально все ячейки пустые
-		
-	
-	
-func _on_timer_timeout() -> void:
-	for i in range(ARRAY_SIZE):
-		if bit_array[i]:  # Если ячейка заполнена
-			if !is_cell_filled(i):  # Проверка, заполнена ли ячейка
-				filled_indices.erase(i)  # Удаляем индекс из массива заполненных ячеек
+func update_cell(index: int, value: Variant) -> void:
+	# Проверяем, является ли value логическим значением
+	if typeof(value) == TYPE_BOOL:
+		self.update_cell(index, value)  # Вызов родительского метода
+		if value:
+			if index not in filled_indices:
+				filled_indices.append(index)
 		else:
-			if i in filled_indices:  # Если ячейка была заполнена, но теперь пустая
-				filled_indices.erase(i)  # Удаляем индекс из массива заполненных ячеек
-	
-	update_cell(0, true)
-	
-func is_cell_filled(index: int) -> bool:
-	if index < 0 or index >= ARRAY_SIZE:
-		pass
-	return bit_array[index]  # Проверяем состояние ячейки в битовом массиве
-
-func update_cell(index: int, state: bool):
-	bit_array[index] = state  # Обновляем состояние ячейки
-	if state and not filled_indices.has(index):
-		filled_indices.append(index)  # Добавляем индекс в массив, если ячейка заполнена
-	elif not state and filled_indices.has(index):
-		filled_indices.erase(index)  # Удаляем индекс, если ячейка стала пустой
+			filled_indices.erase(index)
+	else:
+		push_error("update_cell: Expected a boolean value")
