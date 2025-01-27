@@ -34,3 +34,20 @@ func _get_diagonal_moves(board_size: int) -> Array:
 			else:
 				break
 	return moves
+
+
+# Метод для получения возможных ходов фигуры
+func get_moves(position, rows, columns):
+	return []  # Должен быть переопределен в наследниках
+
+# Метод для проверки, находится ли позиция в пределах поля
+func is_within_bounds(x, y, rows, columns):
+	return x >= 0 and x < columns and y >= 0 and y < rows
+
+# Метод для получения одномерного индекса из координат
+func to_index(x, y, columns):
+	return y * columns + x
+
+# Метод для получения координат из одномерного индекса
+func from_index(index, columns):
+	return [index % columns, index / columns]

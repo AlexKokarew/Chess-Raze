@@ -1,74 +1,142 @@
-extends Node
+extends "res://Save/save.gd"
 
 class_name BaseArrayManager
 
-# Основной массив, управляющий состоянием
-var grid: Array = []
+const LogickAttack = preload("res://logick_attack/logick_attack.gd")
+const BaseFigure = preload("res://class_figyr/base_figyra.gd")
+const Bishop = preload("res://class_figyr/Bishop.gd")
+const King = preload("res://class_figyr/King.gd")
+const Knight = preload("res://class_figyr/Knight.gd")
+const Pawn = preload("res://class_figyr/Pawn.gd")
+const Queen = preload("res://class_figyr/Qween.gd")
+const Rook = preload("res://class_figyr/Rook.gd")
 
-# Инициализация массива с заданным размером и значением по умолчанию
-func initialize(size: int, default_value: Variant = false) -> void:
-	grid.resize(size)
-	for i in range(size):
-		grid[i] = default_value
+# Счетчики для раундов и ходов
+var moves_per_round = 3
+var current_player = 1
+var moves_made = 0
 
-# Изменение размера массива (для двумерных массивов используется rows * columns)
-func resize_array(rows: int, columns: int, default_value: Variant = false) -> void:
-	var new_size = rows * columns
-	grid.resize(new_size)
+# Лог для хранения истории ходов и раундов
+var move_history = []
+var round_history = []
+
+# Карта соответствия классов фигур их индексам
+const FIGURE_CLASSES = {
+	"base": 0,
+	"king": 1,
+	"queen": 2,
+	"knight": 3,
+	"rook": 4,
+	"bishop": 5,
+	"pawn": 6
+}
+
+# Основной массив данных (одноразмерный массив, представляющий доску)
+var grid = []
+var rows = 8
+var columns = 8
+
+# Экземпляр LogickAttack
+var logick_attack_instance: LogickAttack
+
+func _init():
+	logick_attack_instance = LogickAttack.new()
+
+# Инициализация массива
+func initialize_grid(new_rows: int, new_columns: int):
+	rows = new_rows
+	columns = new_columns
+	grid.resize(rows * columns)
 	for i in range(grid.size()):
-		if grid[i] == null:
-			grid[i] = default_value
+		grid[i] = "0"  # Пустая ячейка
+	print("Массив инициализирован: ", grid)
 
-# Обновление значения в указанной ячейке
-func update_cell(index: int, value: Variant) -> void:
-	if index >= 0 and index < grid.size():
+# Получение размеров массива
+func get_dimensions() -> Dictionary:
+	return {"rows": rows, "columns": columns}
+
+# Проверка валидности индекса
+func validate_index(index: int) -> bool:
+	return index >= 0 and index < grid.size()
+
+# Преобразование индекса в координаты
+func from_index(index: int) -> Dictionary:
+	if not validate_index(index):
+		return {}
+	return {"row": index / columns, "column": index % columns}
+
+# Преобразование координат в индекс
+func to_index(row: int, column: int) -> int:
+	if row < 0 or row >= rows or column < 0 or column >= columns:
+		return -1
+	return row * columns + column
+
+# Обновление ячейки массива
+func update_cell(index: int, value: String):
+	if validate_index(index):
 		grid[index] = value
+		print("Ячейка обновлена: ", index, "=>", value)
+	else:
+		print("Ошибка: индекс за пределами массива.")
 
-# Проверка, заполнена ли ячейка
-func is_cell_filled(index: int) -> bool:
-	return grid[index] if index >= 0 and index < grid.size() else false
+# Получение значения ячейки
+func get_cell_value(index: int) -> String:
+	if validate_index(index):
+		return grid[index]
+	print("Ошибка: индекс за пределами массива.")
+	return ""
 
-# Очистка всего массива
-func clear() -> void:
+# Передача данных в LogickAttack
+func process_attacks_and_defenses():
+	var all_pieces = get_all_pieces()
+	var involved_pieces = get_involved_pieces()
+	logick_attack_instance.process_event(all_pieces, involved_pieces, rows)
+
+# Получение всех фигур
+func get_all_pieces() -> Array:
+	var pieces = []
 	for i in range(grid.size()):
-		grid[i] = false
+		if grid[i] != "0":  # Проверяем, не пустая ли ячейка
+			pieces.append(grid[i])
+	return pieces
 
-# Преобразование n-мерных координат в одномерный индекс
-func to_index(coords: Array, dimensions: Array) -> int:
-	var index = 0
-	var stride = 1
-	for i in range(coords.size() - 1, -1, -1):
-		index += coords[i] * stride
-		stride *= dimensions[i]
-	return index
+# Получение вовлеченных фигур
+func get_involved_pieces() -> Array:
+	var involved = []
+	for i in range(grid.size()):
+		if grid[i] != "0" and grid[i].has("involved") and grid[i]["involved"]:
+			involved.append(grid[i])
+	return involved
 
-# Преобразование одномерного индекса в n-мерные координаты
-func from_index(index: int, dimensions: Array) -> Array:
-	var coords = []
-	for i in range(dimensions.size() - 1, -1, -1):
-		coords.insert(0, index % dimensions[i])
-		index = index / dimensions[i]
-	return coords
+# Синхронизация состояний после атаки
+func update_grid_from_logick_attack(updated_pieces: Array):
+	for piece in updated_pieces:
+		update_cell(piece.index, piece)
 
-# Создание пустого n-мерного массива заданных размеров
-func create_empty_array(dimensions: Array) -> Array:
-	if dimensions.size() == 0:
-		return []
-	var result = []
-	for i in range(dimensions[0]):
-		result.append(create_empty_array(dimensions.slice(1)))
-	return result
+# Сохранение состояния массива
+func save_grid_state() -> Dictionary:
+	return {
+		"grid": grid.duplicate(),
+		"rows": rows,
+		"columns": columns
+	}
 
-# Генерация всех координат для n-мерного массива
-func generate_coords(dimensions: Array) -> Array:
-	if dimensions.size() == 0:
-		return []
+# Загрузка состояния массива
+func load_grid_state(state: Dictionary):
+	if state.has("grid") and state.has("rows") and state.has("columns"):
+		grid = state["grid"]
+		rows = state["rows"]
+		columns = state["columns"]
+		print("Состояние массива загружено.")
+	else:
+		print("Ошибка: некорректное состояние массива.")
 
-	var coords = [[]]
-	for dim in dimensions:
-		var new_coords = []
-		for coord in coords:
-			for i in range(dim):
-				new_coords.append(coord + [i])
-		coords = new_coords
-	return coords
+# Логирование текущего состояния массива
+func log_grid_state():
+	print("Текущее состояние массива:")
+	for row in range(rows):
+		var line = ""
+		for column in range(columns):
+			var index = to_index(row, column)
+			line += grid[index] + " "
+		print(line.strip())
