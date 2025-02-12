@@ -37,7 +37,7 @@ func _get_diagonal_moves(board_size: int) -> Array:
 
 
 # Метод для получения возможных ходов фигуры
-func get_moves(position, rows, columns):
+func get_moves(new_position, rows, columns):
 	return []  # Должен быть переопределен в наследниках
 
 # Метод для проверки, находится ли позиция в пределах поля

@@ -2,10 +2,10 @@ class_name King
 extends "res://class_figyr/base_figyra.gd"
 
 
-func get_king_moves(position: int, rows: int, columns: int) -> Array:
+func get_moves(pos: int, rows: int, columns: int) -> Array:
 	var moves = []
-	var x = position % columns
-	var y = position / columns
+	var x = pos % columns
+	var y = pos / columns
 
 	# Соседние клетки (включая диагонали)
 	var directions = [

@@ -1,6 +1,9 @@
-extends "res://Save/save.gd"
+extends Node
 
 class_name BaseArrayManager
+
+
+
 
 const LogickAttack = preload("res://logick_attack/logick_attack.gd")
 const BaseFigure = preload("res://class_figyr/base_figyra.gd")
@@ -37,7 +40,7 @@ var rows = 8
 var columns = 8
 
 # Экземпляр LogickAttack
-var logick_attack_instance: LogickAttack
+var logick_attack_instance
 
 func _init():
 	logick_attack_instance = LogickAttack.new()

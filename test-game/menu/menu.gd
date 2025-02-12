@@ -32,7 +32,6 @@ func _ready():
 	print("Сгенерированная таблица:\n", table)
 
 	# Обновление ячейки
-	BaseArrayManager.update_cell(12, 1)  # Обновляем индекс 12
 	print("Обновленная таблица:\n", BaseArrayManager.generate_table(5, 5))
 
 
